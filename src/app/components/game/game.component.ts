@@ -1,4 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Point } from '../../model/point';
+import { Enviroment } from '../../model/enviroment';
 
 @Component({
   selector: 'app-game',
@@ -7,15 +9,28 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 })
 export class GameComponent implements OnInit {
 
-  @ViewChild('gameCanvas', {static: true})
+  @ViewChild('gameCanvas', { static: true })
   gameCanvas: ElementRef<HTMLCanvasElement>
+
+  ctx: CanvasRenderingContext2D;
+  enviroment: Enviroment;
 
   constructor() { }
 
   ngOnInit(): void {
 
-    let ctx: CanvasRenderingContext2D = this.gameCanvas.nativeElement.getContext("2d");
-    ctx.fillRect(0, 0, 10, 10);
+    this.ctx = this.gameCanvas.nativeElement.getContext("2d");
+    this.ctx.scale(10, 10);
+    this.enviroment = new Enviroment();
+
+    this.drawSnake();
+  }
+
+  drawSnake() {
+    this.enviroment.getSnake().forEach(element => {
+      this.ctx.fillRect(element.getX(), element.geyY(), 1, 1)
+    })
+
   }
 
 }
