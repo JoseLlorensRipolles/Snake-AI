@@ -48,14 +48,15 @@ export class GameComponent implements OnInit {
 
   gameLoop() {
     this.enviroment.takeAction(this.direction);
+    
     this.drawGame();
     setTimeout(() => {
       this.gameLoop();
-    }, 500)
+    }, 200)
   }
 
   drawGame() {
-    this.ctx.clearRect(0, 0, this.enviroment.boardDim[0], this.enviroment.boardDim[1]);
+    this.ctx.clearRect(0, 0, this.enviroment.boardDim.x, this.enviroment.boardDim.y);
     this.drawSnake();
     this.drawApple();
   }
@@ -65,7 +66,7 @@ export class GameComponent implements OnInit {
     this.enviroment.snake.forEach(element => {
       this.ctx.fillRect(
         element.x,
-        this.enviroment.boardDim[1] - 1 - element.y,
+        this.enviroment.boardDim.y - 1 - element.y,
         1,
         1)
     })
@@ -76,7 +77,7 @@ export class GameComponent implements OnInit {
     this.ctx.fillStyle = "#FF0000";
     this.ctx.fillRect(
       this.enviroment.apple.x,
-      this.enviroment.boardDim[1] - 1 - this.enviroment.apple.y,
+      this.enviroment.boardDim.y - 1 - this.enviroment.apple.y,
       1,
       1);
   }
