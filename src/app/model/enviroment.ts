@@ -63,7 +63,19 @@ export class Enviroment {
                 availablePoints.push(point);
             }
         }
-        console.log(availablePoints);
         return availablePoints[Math.floor(Math.random() * availablePoints.length)]
+    }
+
+    isTerminalState(): boolean {
+        let head = this.snake.shift()
+        let isTerminalState: boolean =  
+            head.x < 0 ||
+            head.x >= this.boardDim.x ||
+            head.y < 0 ||
+            head.y >= this.boardDim.y ||
+            this.snake.some(element => element.x === head.x && element.y === head.y)
+        
+        this.snake.unshift(head)
+        return isTerminalState
     }
 }

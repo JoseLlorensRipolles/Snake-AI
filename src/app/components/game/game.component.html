@@ -1,1 +1,16 @@
-<canvas #gameCanvas height="100" width="100" style="border: 1px solid red;"></canvas>
+<div class="container-fluid">
+    <canvas #gameCanvas height="100" width="100" style="border: 1px solid red;"></canvas>
+
+    <div class="row">
+        <h1>Score: {{this.enviroment.snake.length}}</h1>
+    </div>
+
+    <div [hidden]="!this.isTerminalState" class="row align-items-center">
+        <div class="col-auto">
+            <h1>You lost :(</h1>
+        </div>
+        <div class="col ">
+            <button class="btn btn-primary" (click)="restart()">Start</button>
+        </div>
+    </div>
+</div>

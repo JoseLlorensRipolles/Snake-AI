@@ -31,6 +31,7 @@ export class GameComponent implements OnInit {
   ctx: CanvasRenderingContext2D;
   enviroment: Enviroment;
   direction: string;
+  isTerminalState: boolean = false;
 
   constructor() { }
 
@@ -47,12 +48,16 @@ export class GameComponent implements OnInit {
   }
 
   gameLoop() {
-    this.enviroment.takeAction(this.direction);
     
-    this.drawGame();
-    setTimeout(() => {
-      this.gameLoop();
-    }, 200)
+    this.enviroment.takeAction(this.direction);
+    this.isTerminalState = this.enviroment.isTerminalState();
+
+    if (!this.isTerminalState){
+      this.drawGame();
+      setTimeout(() => {
+        this.gameLoop();
+      }, 200)
+    }
   }
 
   drawGame() {
@@ -80,6 +85,11 @@ export class GameComponent implements OnInit {
       this.enviroment.boardDim.y - 1 - this.enviroment.apple.y,
       1,
       1);
+  }
+
+  restart(){
+    console.log("ASD");
+    
   }
 
   @HostListener('window:keyup', ['$event'])
