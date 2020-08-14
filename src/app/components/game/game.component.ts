@@ -88,8 +88,8 @@ export class GameComponent implements OnInit {
   }
 
   restart(){
-    console.log("ASD");
-    
+    this.enviroment.reset();
+    this.gameLoop();
   }
 
   @HostListener('window:keyup', ['$event'])

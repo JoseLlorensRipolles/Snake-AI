@@ -3,10 +3,11 @@ import { range } from 'rxjs';
 
 export class Enviroment {
     boardDim: Point = new Point(10, 10);
-    snake: Point[] = [];
+    snake: Point[];
     apple: Point;
 
     constructor() {
+        this.snake = [];
         this.snake.push(new Point(1, 0));
         this.snake.push(new Point(0, 0));
         this.apple = new Point(this.boardDim.x - 1, this.boardDim.y - 1)
@@ -77,5 +78,12 @@ export class Enviroment {
         
         this.snake.unshift(head)
         return isTerminalState
+    }
+
+    reset(){
+        this.snake = [];
+        this.snake.push(new Point(1, 0));
+        this.snake.push(new Point(0, 0));
+        this.apple = new Point(this.boardDim.x - 1, this.boardDim.y - 1)
     }
 }
