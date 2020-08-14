@@ -6,12 +6,4 @@ export class Point{
         this.x = x;
         this.y = y;
     }
-
-    getX(){
-        return this.x;
-    }
-
-    geyY(){
-        return this.y;
-    }
 }

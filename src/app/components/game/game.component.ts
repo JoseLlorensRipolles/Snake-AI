@@ -24,13 +24,20 @@ export class GameComponent implements OnInit {
     this.enviroment = new Enviroment();
 
     this.drawSnake();
+    this.drawApple();
   }
 
   drawSnake() {
-    this.enviroment.getSnake().forEach(element => {
-      this.ctx.fillRect(element.getX(), element.geyY(), 1, 1)
+    this.ctx.fillStyle = "#000000";
+    this.enviroment.snake.forEach(element => {
+      this.ctx.fillRect(element.x, element.y, 1, 1)
     })
 
+  }
+
+  drawApple(){
+    this.ctx.fillStyle = "#FF0000";
+    this.ctx.fillRect(this.enviroment.apple.x, this.enviroment.apple.y, 1, 1);
   }
 
 }
