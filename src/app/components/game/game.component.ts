@@ -26,12 +26,11 @@ export class GameComponent implements OnInit {
   @ViewChild('gameCanvas', { static: true })
   gameCanvas: ElementRef<HTMLCanvasElement>
 
-
-
   ctx: CanvasRenderingContext2D;
   enviroment: Enviroment;
   direction: string;
   isTerminalState: boolean = false;
+  lastMovement: string;
 
   constructor() { }
 
@@ -39,20 +38,17 @@ export class GameComponent implements OnInit {
 
     this.ctx = this.gameCanvas.nativeElement.getContext("2d");
     this.ctx.scale(10, 10);
-    this.enviroment = new Enviroment();
-    this.direction = "RIGHT"
 
-    this.drawGame()
-
-    this.gameLoop();
+    this.start();
   }
 
   gameLoop() {
-    
+
     this.enviroment.takeAction(this.direction);
+    this.lastMovement = this.direction;
     this.isTerminalState = this.enviroment.isTerminalState();
 
-    if (!this.isTerminalState){
+    if (!this.isTerminalState) {
       this.drawGame();
       setTimeout(() => {
         this.gameLoop();
@@ -87,8 +83,11 @@ export class GameComponent implements OnInit {
       1);
   }
 
-  restart(){
-    this.enviroment.reset();
+  start() {
+    this.enviroment = new Enviroment();
+    this.direction = "RIGHT";
+    this.lastMovement = "RIGHT";
+    this.drawGame();
     this.gameLoop();
   }
 
@@ -98,24 +97,31 @@ export class GameComponent implements OnInit {
 
       case KEY_CODE.LEFT_ARROW:
       case KEY_CODE.A_KEY:
-        this.direction = "LEFT";
-        break;
+        if (this.lastMovement != "RIGHT") {
+          this.direction = "LEFT";
+          break;
+        }
 
       case KEY_CODE.RIGHT_ARROW:
       case KEY_CODE.D_KEY:
-        this.direction = "RIGHT";
-        break;
+        if (this.lastMovement != "LEFT") {
+          this.direction = "RIGHT";
+          break;
+        }
 
       case KEY_CODE.UP_ARROW:
       case KEY_CODE.W_KEY:
-        this.direction = "UP";
-        break;
+        if (this.lastMovement != "DOWN") {
+          this.direction = "UP";
+          break;
+        }
 
       case KEY_CODE.DOWN_ARROW:
       case KEY_CODE.S_KEY:
-        this.direction = "DOWN";
-        break;
-
+        if (this.lastMovement != "UP") {
+          this.direction = "DOWN";
+          break;
+        }
     }
   }
 }
