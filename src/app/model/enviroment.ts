@@ -7,10 +7,7 @@ export class Enviroment {
     apple: Point;
 
     constructor() {
-        this.snake = [];
-        this.snake.push(new Point(1, 0));
-        this.snake.push(new Point(0, 0));
-        this.apple = new Point(this.boardDim.x - 1, this.boardDim.y - 1)
+        this.reset();
     }
 
     takeAction(action: string) {
@@ -69,21 +66,37 @@ export class Enviroment {
 
     isTerminalState(): boolean {
         let head = this.snake.shift()
-        let isTerminalState: boolean =  
+        let isTerminalState: boolean =
             head.x < 0 ||
             head.x >= this.boardDim.x ||
             head.y < 0 ||
             head.y >= this.boardDim.y ||
-            this.snake.some(element => element.x === head.x && element.y === head.y)
-        
-        this.snake.unshift(head)
-        return isTerminalState
+            this.snake.some(element => element.x === head.x && element.y === head.y);
+
+        this.snake.unshift(head);
+        return isTerminalState;
     }
 
-    reset(){
+    reset() {
         this.snake = [];
         this.snake.push(new Point(1, 0));
         this.snake.push(new Point(0, 0));
-        this.apple = new Point(this.boardDim.x - 1, this.boardDim.y - 1)
+        this.apple = this.newApplePosition();
+    }
+
+    getState() {
+        let head = this.snake[0];
+
+        let dangerUp = head.y === this.boardDim.y - 1 || this.snake.some(snakePoint => snakePoint.x === head.x && snakePoint.y - 1 === head.y);
+        let dangerDown = head.y === 0 || this.snake.some(snakePoint => snakePoint.x === head.x && snakePoint.y + 1 === head.y);
+        let dangerRight = head.x === this.boardDim.x - 1 || this.snake.some(snakePoint => snakePoint.x - 1 === head.x && snakePoint.y === head.y);
+        let dangerLeft = head.x === 0 || this.snake.some(snakePoint => snakePoint.x + 1 === head.x && snakePoint.y === head.y);
+
+        let appleUp = head.y < this.apple.y;
+        let appleDown = head.y > this.apple.y;
+        let appleRight = head.x < this.apple.x;
+        let appleLeft = head.x > this.apple.x;
+
+        return [dangerUp, dangerDown, dangerRight, dangerLeft, appleUp, appleDown, appleRight, appleLeft];
     }
 }
