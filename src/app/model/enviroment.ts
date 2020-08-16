@@ -39,6 +39,13 @@ export class Enviroment {
         if (this.snake[0].x === this.apple.x && this.snake[0].y === this.apple.y) {
             this.snake.push(tail)
             this.apple = this.newApplePosition();
+            return 1;
+        } else {
+            if (this.isTerminalState()) {
+                return -1;
+            }else {
+                return 0;
+            }
         }
     }
 

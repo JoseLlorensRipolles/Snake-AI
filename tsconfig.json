@@ -12,6 +12,7 @@
     },
     {
       "path": "./tsconfig.spec.json"
-    }
-]
+    },
+  ],
+  "skipLibCheck": true
 }

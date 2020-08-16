@@ -47,8 +47,6 @@ export class GameComponent implements OnInit {
     this.enviroment.takeAction(this.direction);
     this.lastMovement = this.direction;
     this.isTerminalState = this.enviroment.isTerminalState();
-    console.log(this.enviroment.getState());
-    
 
     if (!this.isTerminalState) {
       this.drawGame();
