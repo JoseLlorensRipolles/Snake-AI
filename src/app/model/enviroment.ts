@@ -1,5 +1,6 @@
 import { Point } from './point'
 import { range } from 'rxjs';
+import * as tf from '@tensorflow/tfjs';
 
 export class Enviroment {
     boardDim: Point = new Point(10, 10);
@@ -104,6 +105,8 @@ export class Enviroment {
         let appleRight = head.x < this.apple.x;
         let appleLeft = head.x > this.apple.x;
 
-        return [dangerUp, dangerDown, dangerRight, dangerLeft, appleUp, appleDown, appleRight, appleLeft];
+        let booleanArray = [dangerUp, dangerDown, dangerRight, dangerLeft, appleUp, appleDown, appleRight, appleLeft];
+        let numberArray: number[] = booleanArray.map( a => a ? 1: 0);
+        return tf.tensor2d([numberArray]);
     }
 }

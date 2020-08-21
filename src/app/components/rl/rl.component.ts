@@ -3,6 +3,13 @@ import * as tf from '@tensorflow/tfjs';
 import { Enviroment } from 'src/app/model/enviroment';
 import { NgPlural } from '@angular/common';
 
+export enum ActionsIdx {
+  "UP" = 0,
+  "DOWN" = 1,
+  "RIGHT" = 2,
+  "LEFT" = 3
+};
+
 @Component({
   selector: 'app-rl',
   templateUrl: './rl.component.html',
@@ -13,7 +20,7 @@ export class RlComponent implements OnInit {
 
   network: any;
   enviroment: Enviroment;
-  EPSILON = 0.1;
+  EPSILON = 0.01;
   GAMMA = 0.9;
   ACTIONS = ["UP", "DOWN", "RIGHT", "LEFT"];
 
@@ -30,14 +37,14 @@ export class RlComponent implements OnInit {
   }
 
   async train() {
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 10000; i++) {
       this.enviroment.reset();
       let isTerminal = this.enviroment.isTerminalState();
 
       let stepCounter = 0;
 
       while (!isTerminal) {
-        let sT = tf.tensor2d([this.enviroment.getState()]);
+        let sT = this.enviroment.getState();
         let aT = await this.epsilonGreedyChoose(sT);
         let r = this.enviroment.takeAction(aT);
         let sT1 = this.enviroment.getState();
@@ -51,21 +58,24 @@ export class RlComponent implements OnInit {
 
     }
   }
+  
   async trainShortMemory(sequence) {
     let targetAtValue;
 
     if (sequence[4]) {
       targetAtValue = sequence[2];
     } else {
-      targetAtValue = this.computeTarget(sequence);
+      targetAtValue = await this.computeTarget(sequence);
     }
 
     let targets = await this.network.predict(sequence[0]).array();
-    targets[sequence[1]] = targetAtValue;
+    targets = targets[0];
+    targets[ActionsIdx[sequence[1]]] = targetAtValue;
+    targets = tf.tensor2d([targets]);
 
-    this.network.fit(
-      tf.tensor2d([sequence[0]]),
-      tf.tensor2d([targets]),
+    await this.network.fit(
+      sequence[0],
+      targets,
       {
         epochs: 1
       }
@@ -74,6 +84,7 @@ export class RlComponent implements OnInit {
 
   async computeTarget(sequence: any) {
     let aux = await this.network.predict(sequence[3]).array();
+    aux = aux[0];
     let targetAtValue = sequence[2] + this.GAMMA * Math.max.apply(Math, aux);
     return targetAtValue;
   }
@@ -89,8 +100,6 @@ export class RlComponent implements OnInit {
   }
 
   argMax(array) {
-    console.log(array);
-
     return array.map((x, i) => [x, i]).reduce((r, a) => (a[0] > r[0] ? a : r))[1];
   }
 
