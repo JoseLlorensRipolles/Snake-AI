@@ -3,7 +3,7 @@ import { range } from 'rxjs';
 import * as tf from '@tensorflow/tfjs';
 
 export class Enviroment {
-    boardDim: Point = new Point(10, 10);
+    boardDim: Point = new Point(5, 5);
     snake: Point[];
     apple: Point;
 

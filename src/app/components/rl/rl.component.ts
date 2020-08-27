@@ -37,28 +37,34 @@ export class RlComponent implements OnInit {
   }
 
   async train() {
-    for (let i = 0; i < 10000; i++) {
+    for (let i = 0; i < 100000; i++) {
       this.enviroment.reset();
-      let isTerminal = this.enviroment.isTerminalState();
-
       let stepCounter = 0;
 
-      while (!isTerminal) {
+      do {
         let sT = this.enviroment.getState();
         let aT = await this.epsilonGreedyChoose(sT);
         let r = this.enviroment.takeAction(aT);
         let sT1 = this.enviroment.getState();
-        isTerminal = this.enviroment.isTerminalState();
+        let isTerminal = this.enviroment.isTerminalState();
 
         let sequence = [sT, aT, r, sT1, isTerminal];
+        // this.printSequence(sequence);
+
         await this.trainShortMemory(sequence);
         stepCounter++;
-      }
-      console.log(stepCounter);
+      } while (!this.enviroment.isTerminalState())
+      console.log(stepCounter, this.enviroment.snake.length);
 
     }
   }
-  
+
+  printSequence(sequence: any[]) {
+    console.log(sequence[0].arraySync(), sequence[1], sequence[2], sequence[3].arraySync(), sequence[4]);
+
+  }
+
+
   async trainShortMemory(sequence) {
     let targetAtValue;
 
@@ -72,6 +78,8 @@ export class RlComponent implements OnInit {
     targets = targets[0];
     targets[ActionsIdx[sequence[1]]] = targetAtValue;
     targets = tf.tensor2d([targets]);
+
+    let aux = targets.arraySync();
 
     await this.network.fit(
       sequence[0],
@@ -94,7 +102,7 @@ export class RlComponent implements OnInit {
       return this.ACTIONS[Math.floor(Math.random() * this.ACTIONS.length)]
     } else {
       let output = await this.network.predict(sT).array();
-      let bestActionIdx = this.argMax(output);
+      let bestActionIdx = this.argMax(output[0]);
       return this.ACTIONS[bestActionIdx];
     }
   }
