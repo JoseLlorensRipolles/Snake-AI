@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { SnakeRlAgentService } from 'src/app/services/snake-rl-agent/snake-rl-agent.service'
 import { Enviroment } from 'src/app/model/enviroment';
+import { Point } from 'src/app/model/point';
 
 @Component({
   selector: 'app-rl',
@@ -29,36 +30,35 @@ export class RlComponent implements OnInit {
 
   showLastGame() {
     this.enviroment.reset();
-    setTimeout(() => {
-      console.log(this.snakeRLAgent.getLastGameActions());
-      
-      if (this.snakeRLAgent.getLastGameActions() ) {
-        this.drawGame(this.snakeRLAgent.getLastGameActions())
+    setTimeout(() => {    
+      if (this.snakeRLAgent.getLastGameSnakesAndApples() ) {
+        this.drawGame(this.snakeRLAgent.getLastGameSnakesAndApples())
       } else {
         this.showLastGame();
       }
     }, 1000)
   }
 
-  drawGame(actions: string[]) {
+  drawGame(actions: [Point[], Point][] ) {
     setTimeout(() => {
       if (actions.length > 0) {
-        let aT = actions.shift();
-        this.enviroment.takeAction(aT);
+        let aux = actions.shift();
+        let snake = aux[0];
+        let apple = aux[1]
         this.ctx.clearRect(0, 0, this.enviroment.boardDim.x, this.enviroment.boardDim.y);
-        this.drawSnake();
-        this.drawApple();
+        this.drawSnake(snake);
+        this.drawApple(apple);
         this.drawGame(actions)
       }else{
         this.showLastGame();
       }
-    }, 200)
+    }, 50)
 
   }
 
-  drawSnake() {
+  drawSnake(snake: Point[]) {
     this.ctx.fillStyle = "#000000";
-    this.enviroment.snake.forEach(element => {
+    snake.forEach(element => {
       this.ctx.fillRect(
         element.x,
         this.enviroment.boardDim.y - 1 - element.y,
@@ -68,11 +68,11 @@ export class RlComponent implements OnInit {
 
   }
 
-  drawApple() {
+  drawApple(apple: Point) {
     this.ctx.fillStyle = "#FF0000";
     this.ctx.fillRect(
-      this.enviroment.apple.x,
-      this.enviroment.boardDim.y - 1 - this.enviroment.apple.y,
+      apple.x,
+      this.enviroment.boardDim.y - 1 - apple.y,
       1,
       1);
   }

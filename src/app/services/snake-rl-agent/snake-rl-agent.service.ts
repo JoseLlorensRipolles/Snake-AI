@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import * as tf from '@tensorflow/tfjs';
 import { Enviroment } from 'src/app/model/enviroment';
 import { NgPlural } from '@angular/common';
+import { Point } from 'src/app/model/point';
 
 export enum ActionsIdx {
   "UP" = 0,
@@ -18,9 +19,9 @@ export class SnakeRlAgentService {
 
   network: any;
   enviroment: Enviroment;
-  lastGameActions: string[];
+  lastGameSnakesAndApples: [Point[], Point][] ;
 
-  EPSILON = 0.01;
+  INITIAL_EPSILON = 0.2;
   GAMMA = 0.9;
   ACTIONS = ["UP", "DOWN", "RIGHT", "LEFT"];
 
@@ -36,31 +37,30 @@ export class SnakeRlAgentService {
     for (let i = 0; i < 100000; i++) {
       this.enviroment.reset();
       let stepCounter = 0;
-      let episodeActions: string[] = [];
-
+      let episodeSnakesAndApples: [Point[], Point][] = [];
+      let epsilon = this.INITIAL_EPSILON / i
       do {
+        episodeSnakesAndApples.push([this.enviroment.snake.map(x => Object.assign({}, x)), this.enviroment.apple]);
+
         let sT = this.enviroment.getState();
-        let aT = await this.epsilonGreedyChoose(sT);
+        let aT = await this.epsilonGreedyChoose(sT, epsilon);
         let r = this.enviroment.takeAction(aT);
         let sT1 = this.enviroment.getState();
         let isTerminal = this.enviroment.isTerminalState();
-
         let sequence = [sT, aT, r, sT1, isTerminal];
-        episodeActions.push(aT);
-        // this.printSequence(sequence);
-
+        
         await this.trainShortMemory(sequence);
         stepCounter++;
       } while (!this.enviroment.isTerminalState());
 
-      this.lastGameActions = episodeActions;
+      this.lastGameSnakesAndApples = episodeSnakesAndApples;
       console.log(stepCounter, this.enviroment.snake.length);
 
     }
   }
 
-  getLastGameActions(): string[]{
-    return this.lastGameActions;
+  getLastGameSnakesAndApples(): [Point[], Point][] {
+    return this.lastGameSnakesAndApples;
   }
 
   printSequence(sequence: any[]) {
@@ -101,8 +101,8 @@ export class SnakeRlAgentService {
     return targetAtValue;
   }
 
-  async epsilonGreedyChoose(sT) {
-    if (Math.random() < this.EPSILON) {
+  async epsilonGreedyChoose(sT, epsilon) {
+    if (Math.random() < epsilon) {
       return this.ACTIONS[Math.floor(Math.random() * this.ACTIONS.length)]
     } else {
       let output = await this.network.predict(sT).array();
