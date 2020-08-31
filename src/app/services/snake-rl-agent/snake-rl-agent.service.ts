@@ -18,6 +18,8 @@ export class SnakeRlAgentService {
 
   network: any;
   enviroment: Enviroment;
+  lastGameActions: string[];
+
   EPSILON = 0.01;
   GAMMA = 0.9;
   ACTIONS = ["UP", "DOWN", "RIGHT", "LEFT"];
@@ -34,6 +36,7 @@ export class SnakeRlAgentService {
     for (let i = 0; i < 100000; i++) {
       this.enviroment.reset();
       let stepCounter = 0;
+      let episodeActions: string[] = [];
 
       do {
         let sT = this.enviroment.getState();
@@ -43,14 +46,21 @@ export class SnakeRlAgentService {
         let isTerminal = this.enviroment.isTerminalState();
 
         let sequence = [sT, aT, r, sT1, isTerminal];
+        episodeActions.push(aT);
         // this.printSequence(sequence);
 
         await this.trainShortMemory(sequence);
         stepCounter++;
-      } while (!this.enviroment.isTerminalState())
+      } while (!this.enviroment.isTerminalState());
+
+      this.lastGameActions = episodeActions;
       console.log(stepCounter, this.enviroment.snake.length);
 
     }
+  }
+
+  getLastGameActions(): string[]{
+    return this.lastGameActions;
   }
 
   printSequence(sequence: any[]) {
