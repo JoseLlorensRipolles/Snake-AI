@@ -49,7 +49,7 @@ export class SnakeRlAgentService {
         let isTerminal = this.enviroment.isTerminalState();
         let sequence = [sT, aT, r, sT1, isTerminal];
         
-        await this.trainShortMemory(sequence);
+        await this.trainForSequence(sequence);
         stepCounter++;
       } while (!this.enviroment.isTerminalState());
 
@@ -69,21 +69,19 @@ export class SnakeRlAgentService {
   }
 
 
-  async trainShortMemory(sequence) {
-    let targetAtValue;
+  async trainForSequence(sequence) {
+    let actionTarget;
 
     if (sequence[4]) {
-      targetAtValue = sequence[2];
+      actionTarget = sequence[2];
     } else {
-      targetAtValue = await this.computeTarget(sequence);
+      actionTarget = await this.computeTarget(sequence);
     }
 
     let targets = await this.network.predict(sequence[0]).array();
     targets = targets[0];
-    targets[ActionsIdx[sequence[1]]] = targetAtValue;
+    targets[ActionsIdx[sequence[1]]] = actionTarget;
     targets = tf.tensor2d([targets]);
-
-    let aux = targets.arraySync();
 
     await this.network.fit(
       sequence[0],
@@ -97,8 +95,8 @@ export class SnakeRlAgentService {
   async computeTarget(sequence: any) {
     let aux = await this.network.predict(sequence[3]).array();
     aux = aux[0];
-    let targetAtValue = sequence[2] + this.GAMMA * Math.max.apply(Math, aux);
-    return targetAtValue;
+    let actionTarget = sequence[2] + this.GAMMA * Math.max.apply(Math, aux);
+    return actionTarget;
   }
 
   async epsilonGreedyChoose(sT, epsilon) {
@@ -127,7 +125,7 @@ export class SnakeRlAgentService {
     this.network.add(tf.layers.dense({
       inputShape: [8],
       activation: 'relu',
-      units: 100
+      units: 500
     }))
 
     this.network.add(tf.layers.dense({

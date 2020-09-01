@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { SnakeRlAgentService } from 'src/app/services/snake-rl-agent/snake-rl-agent.service'
+import { SnakeRlAgentService } from 'src/app/services/rl-agent.service'
 import { Enviroment } from 'src/app/model/enviroment';
 import { Point } from 'src/app/model/point';
 
@@ -16,6 +16,7 @@ export class RlComponent implements OnInit {
 
   ctx: CanvasRenderingContext2D;
   enviroment: Enviroment;
+  score: number = 2;
 
   constructor(private snakeRLAgent: SnakeRlAgentService) { }
 
@@ -29,7 +30,6 @@ export class RlComponent implements OnInit {
   }
 
   showLastGame() {
-    this.enviroment.reset();
     setTimeout(() => {    
       if (this.snakeRLAgent.getLastGameSnakesAndApples() ) {
         this.drawGame(this.snakeRLAgent.getLastGameSnakesAndApples())
@@ -39,16 +39,17 @@ export class RlComponent implements OnInit {
     }, 1000)
   }
 
-  drawGame(actions: [Point[], Point][] ) {
+  drawGame(episodeSnakesAndActions: [Point[], Point][] ) {
     setTimeout(() => {
-      if (actions.length > 0) {
-        let aux = actions.shift();
-        let snake = aux[0];
-        let apple = aux[1]
+      if (episodeSnakesAndActions.length > 0) {
+        let snakesAndActions = episodeSnakesAndActions.shift();
+        let snake = snakesAndActions[0];
+        this.score = snake.length;
+        let apple = snakesAndActions[1];
         this.ctx.clearRect(0, 0, this.enviroment.boardDim.x, this.enviroment.boardDim.y);
         this.drawSnake(snake);
         this.drawApple(apple);
-        this.drawGame(actions)
+        this.drawGame(episodeSnakesAndActions);
       }else{
         this.showLastGame();
       }
