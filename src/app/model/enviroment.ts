@@ -1,6 +1,7 @@
 import { Point } from './point'
 import { range } from 'rxjs';
 import * as tf from '@tensorflow/tfjs';
+import { NumericDataType } from '@tensorflow/tfjs';
 
 export class Enviroment {
     boardDim: Point = new Point(10, 10);
@@ -13,6 +14,33 @@ export class Enviroment {
 
     takeAction(action: string) {
 
+        let move = this.getMoveFromAction(action);
+
+        this.moveSnake(move);
+
+        if (this.snakeIsEatingApple()) {
+            this.apple = this.newApplePosition();
+            return 1;
+        }
+
+        if (this.isTerminalState()) {
+            return -1;
+        }
+
+        return 0;
+    }
+
+    private moveSnake(move: [number, number]) {
+        let head: Point = this.snake[0];
+        this.snake.unshift(new Point(head.x + move[0],
+            head.y + move[1]));
+
+        if (!this.snakeIsEatingApple()) {
+            this.snake.pop();
+        }
+    }
+
+    private getMoveFromAction(action: string) {
         let move: [number, number]
 
         switch (action) {
@@ -30,46 +58,40 @@ export class Enviroment {
                 break;
             }
         }
+        return move;
+    }
 
-        let tail: Point = this.snake.pop();
-        let head: Point = this.snake[0];
-
-        this.snake.unshift(new Point(head.x + move[0],
-            head.y + move[1]));
-
-        if (this.snake[0].x === this.apple.x && this.snake[0].y === this.apple.y) {
-            this.snake.push(tail)
-            this.apple = this.newApplePosition();
-            return 1;
-        } else {
-            if (this.isTerminalState()) {
-                return -1;
-            }else {
-                return 0;
-            }
-        }
+    private snakeIsEatingApple() {
+        return this.snake[0].x === this.apple.x && this.snake[0].y === this.apple.y;
     }
 
     newApplePosition(): Point {
-        let allPoints: Array<Point> = []
+        let freePointsOnBoard: Array<Point> = this.getFreePointsOnBoard();
+        return this.randomChoice(freePointsOnBoard)
+    }
+
+    private randomChoice(collection: any[]): any {
+        return collection[Math.floor(Math.random() * collection.length)];
+    }
+
+    private getFreePointsOnBoard() {
+        return this.getPointsOnBoard().filter(point => !this.isPointUsedBySnake(point))
+    }
+
+    private isPointUsedBySnake(point: Point) {
+        return this.snake.some(snakePoint => {
+            return point.x === snakePoint.x && point.y === snakePoint.y;
+        });
+    }
+
+    private getPointsOnBoard() {
+        let allPoints: Array<Point> = [];
         for (let i = 0; i < this.boardDim.x; i++) {
             for (let j = 0; j < this.boardDim.y; j++) {
-                allPoints.push(new Point(i, j))
+                allPoints.push(new Point(i, j));
             }
         }
-
-        let availablePoints: Array<Point> = []
-        for (let point of allPoints) {
-            let isSnakePoint =
-                this.snake.some(snakePoint => {
-                    return point.x === snakePoint.x && point.y === snakePoint.y;
-                });
-
-            if (!isSnakePoint) {
-                availablePoints.push(point);
-            }
-        }
-        return availablePoints[Math.floor(Math.random() * availablePoints.length)]
+        return allPoints;
     }
 
     isTerminalState(): boolean {
@@ -106,7 +128,7 @@ export class Enviroment {
         let appleLeft = head.x > this.apple.x;
 
         let booleanArray = [dangerUp, dangerDown, dangerRight, dangerLeft, appleUp, appleDown, appleRight, appleLeft];
-        let numberArray: number[] = booleanArray.map( a => a ? 1: 0);
-        return tf.tensor2d([numberArray]);
+        let stateArray: number[] = booleanArray.map(a => a ? 1 : 0);
+        return stateArray
     }
 }

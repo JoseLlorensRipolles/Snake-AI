@@ -42,10 +42,10 @@ export class SnakeRlAgentService {
       do {
         episodeSnakesAndApples.push([this.enviroment.snake.map(x => Object.assign({}, x)), this.enviroment.apple]);
 
-        let sT = this.enviroment.getState();
+        let sT = tf.tensor2d([this.enviroment.getState()]);
         let aT = await this.epsilonGreedyChoose(sT, epsilon);
         let r = this.enviroment.takeAction(aT);
-        let sT1 = this.enviroment.getState();
+        let sT1 = tf.tensor2d([this.enviroment.getState()]);
         let isTerminal = this.enviroment.isTerminalState();
         let sequence = [sT, aT, r, sT1, isTerminal];
         
