@@ -1,16 +1,33 @@
-<div class="container-fluid">
-    <canvas #gameCanvas height="100" width="100" style="border: 1px solid red;"></canvas>
+<div class="game-view m-5 p-5 shadow-lg">
 
     <div class="row">
-        <h1>Score: {{this.enviroment.snake.length}}</h1>
+        <div class="col text-center">
+            <canvas #gameCanvas height="100" width="100" style="border: 2px solid gray;"></canvas>
+        </div>
     </div>
 
-    <div [hidden]="!this.isTerminalState" class="row align-items-center">
+    <div class="row">
+        <div class="col">
+            <h1 class="text-center">Score: {{this.enviroment.snake.length}}</h1>
+        </div>
+    </div>
+</div>
+
+<div class="mt-5 p-5">
+    <div class="row align-items-center">
         <div class="col-auto">
-            <h1>You lost :(</h1>
+            <h3>Play with WASD or &#8592; &#8593; &#8594; &#8595;</h3>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="this.isTerminalState" class="px-5">
+    <div class="row align-items-center">
+        <div class="col-auto">
+            <h3>You've lost.</h3>
         </div>
         <div class="col ">
-            <button class="btn btn-primary" (click)="start()">Start</button>
+            <button class="btn btn-primary" (click)="start()">Restart</button>
         </div>
     </div>
 </div>

@@ -2,3 +2,16 @@
 
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap';
+
+html, body {
+    height: 100%;
+}
+
+.main{
+    background-color: #cccccc;
+    height: 100%;
+}
+
+.game-view{
+    background-color: white;
+}

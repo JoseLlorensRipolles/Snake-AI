@@ -1,8 +1,22 @@
-<div class="container-fluid">
-    <canvas #gameCanvas height="100" width="100" style="border: 1px solid red;"></canvas>
+<div class="game-view m-5 p-5 shadow-lg">
 
     <div class="row">
-        <h1>Score: {{this.score}}</h1>
+        <div class="col text-center">
+            <canvas #gameCanvas height="100" width="100" style="border: 2px solid gray;"></canvas>
+        </div>
     </div>
 
+    <div class="row">
+        <div class="col">
+            <h1 class="text-center">Score: {{this.score}}</h1>
+        </div>
+    </div>
+</div>
+
+<div class="m-5 p-5">
+    <div class="row align-items-center">
+        <div class="col-auto">
+            <h3>Shown games have been played by a RL agent training a DQN on your browser. How long till he beats you?</h3>
+        </div>
+    </div>
 </div>

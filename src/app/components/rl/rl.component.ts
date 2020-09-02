@@ -44,8 +44,8 @@ export class RlComponent implements OnInit {
       if (episodeSnakesAndActions.length > 0) {
         let snakesAndActions = episodeSnakesAndActions.shift();
         let snake = snakesAndActions[0];
-        this.score = snake.length;
         let apple = snakesAndActions[1];
+        this.score = snake.length;
         this.ctx.clearRect(0, 0, this.enviroment.boardDim.x, this.enviroment.boardDim.y);
         this.drawSnake(snake);
         this.drawApple(apple);
