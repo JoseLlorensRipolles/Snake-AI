@@ -21,7 +21,9 @@ export class SnakeRlAgentService {
   enviroment: Enviroment;
   lastGameSnakesAndApples: [Point[], Point][] ;
 
-  INITIAL_EPSILON = 0.2;
+  INITIAL_EPSILON = 1;
+  EPSILON_DECAY = 0.95;
+  MINUMUM_EPSILON = 0.005;
   GAMMA = 0.9;
   ACTIONS = ["UP", "DOWN", "RIGHT", "LEFT"];
 
@@ -34,16 +36,15 @@ export class SnakeRlAgentService {
   }
 
   async train() {
-    for (let i = 0; i < 100000; i++) {
+    for (let episodeNumber = 0; episodeNumber < 100000; episodeNumber++) {
       this.enviroment.reset();
       let stepCounter = 0;
       let episodeSnakesAndApples: [Point[], Point][] = [];
-      let epsilon = this.INITIAL_EPSILON / i
       do {
         episodeSnakesAndApples.push([this.enviroment.snake.map(x => Object.assign({}, x)), this.enviroment.apple]);
 
         let sT = tf.tensor2d([this.enviroment.getState()]);
-        let aT = await this.epsilonGreedyChoose(sT, epsilon);
+        let aT = await this.epsilonGreedyChoose(sT, episodeNumber);
         let r = this.enviroment.takeAction(aT);
         let sT1 = tf.tensor2d([this.enviroment.getState()]);
         let isTerminal = this.enviroment.isTerminalState();
@@ -62,12 +63,6 @@ export class SnakeRlAgentService {
   getLastGameSnakesAndApples(): [Point[], Point][] {
     return this.lastGameSnakesAndApples;
   }
-
-  printSequence(sequence: any[]) {
-    console.log(sequence[0].arraySync(), sequence[1], sequence[2], sequence[3].arraySync(), sequence[4]);
-
-  }
-
 
   async trainForSequence(sequence) {
     let actionTarget;
@@ -99,7 +94,9 @@ export class SnakeRlAgentService {
     return actionTarget;
   }
 
-  async epsilonGreedyChoose(sT, epsilon) {
+  async epsilonGreedyChoose(sT, t) {
+
+    let epsilon = Math.min(this.INITIAL_EPSILON * Math.pow(this.EPSILON_DECAY, t), this.MINUMUM_EPSILON)
     if (Math.random() < epsilon) {
       return this.ACTIONS[Math.floor(Math.random() * this.ACTIONS.length)]
     } else {
