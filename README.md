@@ -1,4 +1,4 @@
-# HoldheSingularity
+# HoldTheSingularity
 
 Play snake against a RL agent training on your browser! Play at: https://josellorensripolles.github.io/hold-the-singularity/
 
