@@ -1,5 +1,10 @@
-<div class="game-view m-5 p-5 shadow-lg">
+<div class="row mt-5">
+    <div class="col">
+        <h2 class="text-center title"><ins>You</ins></h2>
+    </div>
+</div>
 
+<div class="game-view p-5 mr-5 ml-5 shadow-lg">
     <div class="row">
         <div class="col text-center">
             <canvas #gameCanvas height="100" width="100" style="border: 2px solid gray;"></canvas>
@@ -13,7 +18,7 @@
     </div>
 </div>
 
-<div class="mt-5 p-5">
+<div *ngIf="!this.isTerminalState" class="p-5">
     <div class="row align-items-center">
         <div class="col-auto">
             <h3>Play with WASD or &#8593; &#8592; &#8595; &#8594;</h3>
@@ -21,12 +26,12 @@
     </div>
 </div>
 
-<div *ngIf="this.isTerminalState" class="px-5">
+<div *ngIf="this.isTerminalState" class="p-5">
     <div class="row align-items-center">
         <div class="col-auto">
             <h3>You've lost.</h3>
         </div>
-        <div class="col ">
+        <div class="col">
             <button class="btn btn-primary" (click)="start()">Restart</button>
         </div>
     </div>
