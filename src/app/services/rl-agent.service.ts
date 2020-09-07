@@ -27,11 +27,14 @@ export class SnakeRlAgentService {
   GAMMA = 0.9;
   ACTIONS = ["UP", "DOWN", "RIGHT", "LEFT"];
 
+  HEIGHT = 11;
+  WIDTH = 11;
+
   constructor() { }
 
   public start() {
     this.initializeNetwork();
-    this.enviroment = new Enviroment();
+    this.enviroment = new Enviroment(this.HEIGHT, this.WIDTH);
     this.train();
   }
 

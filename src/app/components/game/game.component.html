@@ -7,7 +7,7 @@
 <div class="game-view p-5 mr-5 ml-5 shadow-lg">
     <div class="row">
         <div class="col text-center">
-            <canvas #gameCanvas height="100" width="100" style="border: 2px solid gray;"></canvas>
+            <canvas #gameCanvas [height]="this.HEIGHT * this.SCALE" [width]="this.WIDTH * this.SCALE" style="border: 2px solid gray;"></canvas>
         </div>
     </div>
 

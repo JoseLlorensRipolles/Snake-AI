@@ -23,7 +23,11 @@ enum KEY_CODE {
 
 export class GameComponent implements OnInit {
 
-  @ViewChild('gameCanvas', { static: true })
+  HEIGHT = 11;
+  WIDTH = 11;
+  SCALE = 10;
+
+  @ViewChild('gameCanvas', {static: true})
   gameCanvas: ElementRef<HTMLCanvasElement>
 
   ctx: CanvasRenderingContext2D;
@@ -35,11 +39,12 @@ export class GameComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-
     this.ctx = this.gameCanvas.nativeElement.getContext("2d");
-    this.ctx.scale(10, 10);
-
-    this.start();
+    this.start();    
+  }
+  
+  ngAfterViewInit():void {
+    this.ctx.scale(this.SCALE, this.SCALE);
   }
 
   gameLoop() {
@@ -57,7 +62,7 @@ export class GameComponent implements OnInit {
   }
 
   drawGame() {
-    this.ctx.clearRect(0, 0, this.enviroment.boardDim.x, this.enviroment.boardDim.y);
+    this.ctx.clearRect(0, 0, this.WIDTH, this.HEIGHT);
     this.drawSnake();
     this.drawApple();
   }
@@ -84,7 +89,7 @@ export class GameComponent implements OnInit {
   }
 
   start() {
-    this.enviroment = new Enviroment();
+    this.enviroment = new Enviroment(this.HEIGHT, this.WIDTH);
     this.direction = "RIGHT";
     this.lastMovement = "RIGHT";
     this.drawGame();

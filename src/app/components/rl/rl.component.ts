@@ -11,6 +11,9 @@ import { Point } from 'src/app/model/point';
 
 export class RlComponent implements OnInit {
 
+  HEIGHT = 11;
+  WIDTH = 11;
+
   @ViewChild('gameCanvas', { static: true })
   gameCanvas: ElementRef<HTMLCanvasElement>
 
@@ -22,7 +25,7 @@ export class RlComponent implements OnInit {
 
   ngOnInit(): void {
     this.snakeRLAgent.start();
-    this.enviroment = new Enviroment();
+    this.enviroment = new Enviroment(this.HEIGHT, this.WIDTH);
     this.ctx = this.gameCanvas.nativeElement.getContext("2d");
     this.ctx.scale(10, 10);
 
