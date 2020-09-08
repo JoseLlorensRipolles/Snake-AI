@@ -54,7 +54,7 @@ export class RlComponent implements OnInit {
         let snake = snakesAndActions[0];
         let apple = snakesAndActions[1];
         this.score = snake.length;
-        this.ctx.clearRect(0, 0, this.enviroment.boardDim.x, this.enviroment.boardDim.y);
+        this.ctx.clearRect(0, 0, this.WIDTH, this.HEIGHT);
         this.drawSnake(snake);
         this.drawApple(apple);
         this.drawGame(episodeSnakesAndActions);
@@ -70,7 +70,7 @@ export class RlComponent implements OnInit {
     snake.forEach(element => {
       this.ctx.fillRect(
         element.x,
-        this.enviroment.boardDim.y - 1 - element.y,
+        this.HEIGHT - 1 - element.y,
         1,
         1)
     })
@@ -81,7 +81,7 @@ export class RlComponent implements OnInit {
     this.ctx.fillStyle = "#FF0000";
     this.ctx.fillRect(
       apple.x,
-      this.enviroment.boardDim.y - 1 - apple.y,
+      this.HEIGHT - 1 - apple.y,
       1,
       1);
   }

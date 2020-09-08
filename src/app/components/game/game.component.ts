@@ -72,7 +72,7 @@ export class GameComponent implements OnInit {
     this.enviroment.snake.forEach(element => {
       this.ctx.fillRect(
         element.x,
-        this.enviroment.boardDim.y - 1 - element.y,
+        this.WIDTH - 1 - element.y,
         1,
         1)
     })
@@ -83,7 +83,7 @@ export class GameComponent implements OnInit {
     this.ctx.fillStyle = "#FF0000";
     this.ctx.fillRect(
       this.enviroment.apple.x,
-      this.enviroment.boardDim.y - 1 - this.enviroment.apple.y,
+      this.WIDTH - 1 - this.enviroment.apple.y,
       1,
       1);
   }
