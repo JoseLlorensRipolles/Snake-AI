@@ -11,11 +11,7 @@ export enum ActionsIdx {
   "LEFT" = 3
 };
 
-@Injectable({
-  providedIn: 'root'
-})
-
-export class SnakeRlAgentService {
+export class SnakeRlAgent {
 
   network: any;
   enviroment: Enviroment;
@@ -27,14 +23,17 @@ export class SnakeRlAgentService {
   GAMMA = 0.9;
   ACTIONS = ["UP", "DOWN", "RIGHT", "LEFT"];
 
-  HEIGHT = 11;
-  WIDTH = 11;
+  height: number;
+  width: number;
 
-  constructor() { }
+  constructor(height: number, width: number) {
+    this.height = height;
+    this.width = width
+   }
 
   public start() {
     this.initializeNetwork();
-    this.enviroment = new Enviroment(this.HEIGHT, this.WIDTH);
+    this.enviroment = new Enviroment(this.height, this.width);
     this.train();
   }
 
