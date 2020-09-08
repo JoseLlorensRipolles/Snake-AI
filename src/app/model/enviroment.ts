@@ -4,11 +4,12 @@ import * as tf from '@tensorflow/tfjs';
 import { NumericDataType } from '@tensorflow/tfjs';
 
 export class Enviroment {
-    boardDim: Point = new Point(10, 10);
+    boardDim: Point;
     snake: Point[];
     apple: Point;
 
-    constructor() {
+    constructor(heigh: number, width: number) {
+        this.boardDim = new Point(heigh, width);
         this.reset();
     }
 

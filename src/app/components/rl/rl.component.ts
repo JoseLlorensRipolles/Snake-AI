@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { SnakeRlAgentService } from 'src/app/services/rl-agent.service'
+import { SnakeRlAgent } from 'src/app/model/snake-rl-agent'
 import { Enviroment } from 'src/app/model/enviroment';
 import { Point } from 'src/app/model/point';
 
@@ -11,22 +11,30 @@ import { Point } from 'src/app/model/point';
 
 export class RlComponent implements OnInit {
 
+  HEIGHT = 10;
+  WIDTH = 10;
+  SCALE = 10;
+
   @ViewChild('gameCanvas', { static: true })
   gameCanvas: ElementRef<HTMLCanvasElement>
 
   ctx: CanvasRenderingContext2D;
   enviroment: Enviroment;
   score: number = 2;
+  snakeRLAgent: SnakeRlAgent;
 
-  constructor(private snakeRLAgent: SnakeRlAgentService) { }
+  constructor() { }
 
   ngOnInit(): void {
+    this.snakeRLAgent = new SnakeRlAgent(this.HEIGHT, this.WIDTH);
     this.snakeRLAgent.start();
-    this.enviroment = new Enviroment();
+    this.enviroment = new Enviroment(this.HEIGHT, this.WIDTH);
     this.ctx = this.gameCanvas.nativeElement.getContext("2d");
-    this.ctx.scale(10, 10);
-
     this.showLastGame();
+  }
+
+  ngAfterViewInit():void {
+    this.ctx.scale(this.SCALE, this.SCALE);
   }
 
   showLastGame() {
@@ -46,7 +54,7 @@ export class RlComponent implements OnInit {
         let snake = snakesAndActions[0];
         let apple = snakesAndActions[1];
         this.score = snake.length;
-        this.ctx.clearRect(0, 0, this.enviroment.boardDim.x, this.enviroment.boardDim.y);
+        this.ctx.clearRect(0, 0, this.WIDTH, this.HEIGHT);
         this.drawSnake(snake);
         this.drawApple(apple);
         this.drawGame(episodeSnakesAndActions);
@@ -62,7 +70,7 @@ export class RlComponent implements OnInit {
     snake.forEach(element => {
       this.ctx.fillRect(
         element.x,
-        this.enviroment.boardDim.y - 1 - element.y,
+        this.HEIGHT - 1 - element.y,
         1,
         1)
     })
@@ -73,7 +81,7 @@ export class RlComponent implements OnInit {
     this.ctx.fillStyle = "#FF0000";
     this.ctx.fillRect(
       apple.x,
-      this.enviroment.boardDim.y - 1 - apple.y,
+      this.HEIGHT - 1 - apple.y,
       1,
       1);
   }
