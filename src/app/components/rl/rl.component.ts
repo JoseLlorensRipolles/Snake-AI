@@ -61,7 +61,7 @@ export class RlComponent implements OnInit {
       }else{
         this.showLastGame();
       }
-    }, 50)
+    }, 200)
 
   }
 

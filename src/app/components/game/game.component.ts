@@ -122,8 +122,8 @@ export class GameComponent implements OnInit {
 
   start() {
     this.enviroment = new Enviroment(this.HEIGHT, this.WIDTH);
-    this.direction = "RIGHT";
-    this.lastMovement = "RIGHT";
+    this.direction = "UP";
+    this.lastMovement = "UP";
     this.drawGame();
     this.gameLoop();
   }

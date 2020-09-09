@@ -110,8 +110,8 @@ export class Enviroment {
 
     reset() {
         this.snake = [];
-        this.snake.push(new Point(1, 0));
-        this.snake.push(new Point(0, 0));
+        this.snake.push(new Point(Math.floor(this.boardDim.x / 2), 4));
+        this.snake.push(new Point(Math.floor(this.boardDim.x / 2), 3));
         this.apple = this.newApplePosition();
     }
 
