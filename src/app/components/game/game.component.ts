@@ -23,8 +23,8 @@ enum KEY_CODE {
 
 export class GameComponent implements OnInit {
 
-  HEIGHT = 11;
-  WIDTH = 11;
+  HEIGHT = 15;
+  WIDTH = 15;
   SCALE = 10;
 
   @ViewChild('gameCanvas', {static: true})

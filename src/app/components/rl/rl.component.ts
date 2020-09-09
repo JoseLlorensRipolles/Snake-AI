@@ -11,8 +11,8 @@ import { Point } from 'src/app/model/point';
 
 export class RlComponent implements OnInit {
 
-  HEIGHT = 10;
-  WIDTH = 10;
+  HEIGHT = 15;
+  WIDTH = 15;
   SCALE = 10;
 
   @ViewChild('gameCanvas', { static: true })
