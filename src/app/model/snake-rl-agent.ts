@@ -57,8 +57,6 @@ export class SnakeRlAgent {
       } while (!this.enviroment.isTerminalState());
 
       this.lastGameSnakesAndApples = episodeSnakesAndApples;
-      console.log(stepCounter, this.enviroment.snake.length);
-
     }
   }
 
