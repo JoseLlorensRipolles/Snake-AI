@@ -1,10 +1,10 @@
-<div class="row mt-5">
+<div class="row mt-3 mt-lg-5">
     <div class="col">
         <h2 class="text-center title"><ins>You</ins></h2>
     </div>
 </div>
 
-<div class="game-view p-5 mr-5 ml-5 shadow-lg">
+<div class="game-view py-4 p-lg-5 mx-2 mx-lg-5 shadow">
     <div class="row">
         <div class="col text-center">
             <canvas #gameCanvas [height]="this.HEIGHT * this.SCALE" [width]="this.WIDTH * this.SCALE" style="border: 2px solid gray;"></canvas>
@@ -13,25 +13,22 @@
 
     <div class="row">
         <div class="col">
-            <h1 class="text-center">Score: {{this.enviroment.snake.length}}</h1>
+            <h3 class="text-center">Score: {{this.enviroment.snake.length}}</h3>
         </div>
     </div>
 </div>
 
-<div *ngIf="!this.isTerminalState" class="p-5">
+<div *ngIf="!this.isTerminalState" class="p-3 p-lg-5">
     <div class="row align-items-center">
         <div class="col-auto">
-            <h3>Play with WASD or &#8593; &#8592; &#8595; &#8594;</h3>
+            <h4>Play with WASD or &#8593; &#8592; &#8595; &#8594;</h4>
         </div>
     </div>
 </div>
 
-<div *ngIf="this.isTerminalState" class="p-5">
-    <div class="row align-items-center">
-        <div class="col-auto">
-            <h3>You've lost.</h3>
-        </div>
-        <div class="col">
+<div *ngIf="this.isTerminalState" class="p-3 p-lg-5">
+    <div class="row justify-content-center">
+        <div class="col text-center">
             <button class="btn btn-primary" (click)="start()">Restart</button>
         </div>
     </div>
