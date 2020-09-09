@@ -27,23 +27,55 @@ export class GameComponent implements OnInit {
   WIDTH = 15;
   SCALE = 10;
 
-  @ViewChild('gameCanvas', {static: true})
+  @ViewChild('gameCanvas', { static: true })
   gameCanvas: ElementRef<HTMLCanvasElement>
+
+  @ViewChild('gameView', { static: true })
+  gameView: ElementRef<HTMLCanvasElement>
 
   ctx: CanvasRenderingContext2D;
   enviroment: Enviroment;
   direction: string;
   isTerminalState: boolean = false;
   lastMovement: string;
+  isTouchScreen: boolean;
 
   constructor() { }
 
   ngOnInit(): void {
+    this.gameView.nativeElement.addEventListener("touchstart", e => this.touchMove(e))
+    this.gameView.nativeElement.addEventListener("touchmove", e => this.touchMove(e))
     this.ctx = this.gameCanvas.nativeElement.getContext("2d");
-    this.start();    
+    this.isTouchScreen = this.checkIfTouchScreen();
+    this.start();
   }
-  
-  ngAfterViewInit():void {
+
+  checkIfTouchScreen(): boolean {
+    let hasTouchScreen = false;
+    if ("maxTouchPoints" in navigator) {
+      hasTouchScreen = navigator.maxTouchPoints > 0;
+    } else if ("msMaxTouchPoints" in navigator) {
+      hasTouchScreen = window.navigator.msMaxTouchPoints > 0;
+    } else {
+      let mQ = window.matchMedia && matchMedia("(pointer:coarse)");
+      if (mQ && mQ.media === "(pointer:coarse)") {
+        hasTouchScreen = !!mQ.matches;
+      } else if ('orientation' in window) {
+        hasTouchScreen = true; // deprecated, but good fallback
+      } else {
+        // Only as a last resort, fall back to user agent sniffing
+        let UA = window.navigator.userAgent;
+        hasTouchScreen = (
+          /\b(BlackBerry|webOS|iPhone|IEMobile)\b/i.test(UA) ||
+          /\b(Android|Windows Phone|iPad|iPod)\b/i.test(UA)
+        );
+      }
+    }
+
+    return hasTouchScreen
+  }
+
+  ngAfterViewInit(): void {
     this.ctx.scale(this.SCALE, this.SCALE);
   }
 
@@ -129,5 +161,41 @@ export class GameComponent implements OnInit {
         }
     }
   }
-}
 
+  touchMove(event: TouchEvent) {
+
+    let gameViewBoundingRect = this.gameView.nativeElement.getBoundingClientRect();
+
+    let touchRelativeX = event.touches[0].pageX - gameViewBoundingRect.x;
+    let touchRelativeY = event.touches[0].pageY - gameViewBoundingRect.y;
+
+    let height = gameViewBoundingRect.height
+    let width = gameViewBoundingRect.width
+
+    let percentX = (touchRelativeX) / width;
+    let percentY = (touchRelativeY) / height;
+
+
+    if (percentY > percentX) {
+      if (1 - percentY > percentX) {
+        if (this.lastMovement != "RIGHT") {
+          this.direction = "LEFT"
+        }
+      } else {
+        if (this.lastMovement != "UP") {
+          this.direction = "DOWN"
+        }
+      }
+    } else {
+      if (1 - percentY > percentX) {
+        if (this.lastMovement != "DOWN") {
+          this.direction = "UP"
+        }
+      } else {
+        if (this.lastMovement != "LEFT") {
+          this.direction = "RIGHT"
+        }
+      }
+    }
+  }
+}
