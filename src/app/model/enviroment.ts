@@ -112,6 +112,7 @@ export class Enviroment {
         this.snake = [];
         this.snake.push(new Point(Math.floor(this.boardDim.x / 2), 4));
         this.snake.push(new Point(Math.floor(this.boardDim.x / 2), 3));
+        this.snake.push(new Point(Math.floor(this.boardDim.x / 2), 2));
         this.apple = this.newApplePosition();
     }
 
