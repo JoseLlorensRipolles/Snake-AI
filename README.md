@@ -2,7 +2,7 @@
 
 Play snake against a RL agent training on your browser! Play at: https://josellorensripolles.github.io/hold-the-singularity/
 
-
+![Demo](src/assets/snake_peek.gif)
 ## Installation
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.0.5.
