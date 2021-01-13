@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "Snake-AI": {
+    "snake-ai": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/Snake-AI",
+            "outputPath": "dist/snake-ai",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -66,18 +66,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "Snake-AI:build"
+            "browserTarget": "snake-ai:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "Snake-AI:build:production"
+              "browserTarget": "snake-ai:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "Snake-AI:build"
+            "browserTarget": "snake-ai:build"
           }
         },
         "test": {
@@ -114,16 +114,16 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "Snake-AI:serve"
+            "devServerTarget": "snake-ai:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "Snake-AI:serve:production"
+              "devServerTarget": "snake-ai:serve:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "Snake-AI"
+  "defaultProject": "snake-ai"
 }

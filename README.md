@@ -1,6 +1,6 @@
 # HoldTheSingularity
 
-Play snake against a RL agent training on your browser! Play at: https://josellorensripolles.github.io/hold-the-singularity/
+Play snake against a RL agent training on your browser! Play at: https://josellorensripolles.github.io/Snake-AI/
 
 ![Demo](src/assets/snake_peek.gif)
 ## Installation
